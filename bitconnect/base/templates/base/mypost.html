@@ -1,0 +1,61 @@
+{% extends 'base/profile.html' %}
+
+{% block title %} My Post {%endblock%}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-offset-4 col-md-4">
+        <h1>Your Posts</h1>
+        {% if member.posts.count == 0%} <h2>No Posts to Show</h2> {%endif%}
+        <ul class="list-group">
+        {% for post in member.posts.all %}
+            <li class = "list-group-item">
+                <h2>{{post.title}}</h2>
+                <p>{{post.content}}</p>
+                <p>{{post.liked.count}} Likes &nbsp;{{post.comments.count}} Comments
+                </p>
+                {% if current_member not in post.liked.all %}
+                <a class="btn btn-default bg-fade" href="{% url 'like' post.id%}">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Like
+                </a>
+                {% else %}
+                <a class="btn btn-default bg-fade" href="{% url 'dislike' post.id%}">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;Dislike
+                </a>
+                {%endif%}
+                <a class="btn btn-default bg-fade" href="{% url 'postdetail' post.id %}">
+                    <span class="glyphicon glyphicon-comment"></span>&nbsp;Comment
+                </a>
+                {% if member.user == current_member.user %}
+                <a class="btn btn-default bg-fade" href="{% url 'editpost' post.id %}">
+                    <span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit Post
+                </a>
+                <a class="btn btn-default bg-fade" href="{% url 'deletepost' post.id %}">
+                    <span class="glyphicon glyphicon-trash"></span>&nbsp;Delete Post
+                </a>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    
+    <div class=" col-md-4">
+        {% if member.user == current_member.user%}
+        <h2>Create A New Post</h2>
+        <form method="POST">
+            {%csrf_token%}
+            {% for field in form %}
+                <div class="form-group">
+                    <span class="text-danger small">{{field.errors}}</span>
+                    <label class="control-label" style="font-size: 1.5em;">{{field.label_tag}}</label>
+                    <div style="font-size: 1.5em;">{{field}}</div>
+                </div>
+            {%endfor%}
+            <button type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span>&nbsp;Post
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

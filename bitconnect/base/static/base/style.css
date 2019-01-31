@@ -1,0 +1,48 @@
+body{
+    background-image: url("images/background.jpeg") ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+
+.navbar-brand{
+    font-family: 'Baloo Thambi', cursive;
+    color: azure;
+}
+
+.footer {
+    background-color: #3c4146;
+    color: azure;
+    position: absolute;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
+}
+
+.SignInHeader{
+    background-color: #3c4146;
+    color: azure;
+    font-family: 'Pacifico', cursive;
+    text-align: center;
+    font-size: 10em;
+}
+
+.SignInBox{
+    padding: 100px;
+    border: 1px black solid;
+    background: white;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.prosidebar{
+    border: 1px black solid;
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    padding: 10px 0px 15px 0px;
+    position: fixed ;
+    left : 50px; 
+}

@@ -1,0 +1,35 @@
+{% extends 'base/profile.html' %}
+
+{% block title %} Posts {%endblock%}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-offset-4 col-md-4">
+            <h1>Posts</h1>
+            {% if len == 0%} <h2>No Posts to Show</h2> {%endif%}
+            <ul class="list-group">
+            {% for post in posts %}
+                <li class = "list-group-item">
+                    <h2>{{post.author.username}}</h2>
+                    <h3>{{post.title}}</h3>
+                    <p>{{post.content}}</p>
+                    <p>{{post.liked.count}} Likes &nbsp;{{post.comments.count}} Comments
+                    </p>
+                    {% if current_member not in post.liked.all %}
+                    <a class="btn btn-default bg-fade" href="{% url 'plike' post.id%}">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Like
+                    </a>
+                    {% else %}
+                    <a class="btn btn-default bg-fade" href="{% url 'pdislike' post.id%}">
+                        <span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;Dislike
+                    </a>
+                    {%endif%}
+                    <a class="btn btn-default bg-fade" href="{% url 'postdetail' post.id %}">
+                        <span class="glyphicon glyphicon-comment"></span>&nbsp;Comment
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+    </div>
+</div>
+{% endblock %}

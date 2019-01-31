@@ -1,0 +1,34 @@
+{% extends 'base/profile.html' %}
+
+{% block title%}Friends{% endblock %}
+
+{% block content %}
+    <div class = "col-sm-offset-4">
+        <h1>Your Could-Be Friends</h1>
+        <ul class = "list-group">
+            {% for mem in users %}
+                <li class="list-group-item">
+                    <h3><a href= "{% url 'myposts' mem.id %}" style="color: darkcyan">{{mem.username}}</a></h3>
+                    <h4>{{mem.first_name}} {{mem.last_name}}</h4>
+                    <h4>{{mem.posts.count}} Posts</h4>
+                    {% if current_member in mem.sent_requests.all%}
+                        <a class = "btn btn-default" href = "{% url 'findacceptrequest' mem.id%}">
+                            Accept Request
+                        </a>
+                        <a class = "btn btn-default" href = "{% url 'findrejectrequest' mem.id%}">
+                            Reject Request
+                        </a>
+                    {% elif current_member in mem.friend_requests.all %}
+                        <a class = "btn btn-default" href = "{% url 'finddeleterequest' mem.id%}">
+                            Delete Request
+                        </a>
+                    {% else %}
+                        <a class = "btn btn-default" href = "{% url 'findsendrequest' mem.id %}">
+                            Send Request
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

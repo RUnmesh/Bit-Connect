@@ -1,0 +1,40 @@
+{% extends 'base/profile.html' %}
+
+{% block title%}Friend Requests{% endblock %}
+
+{% block content %}
+    <div class = "col-sm-offset-4 col-sm-4">
+        <h1>Friend Requests</h1>
+        {% if current_member.friend_requests.count == 0%} <h3>No Friend Requests</h3> {%endif%}
+        <ul class = "list-group" >
+            {% for friend in current_member.friend_requests.all %}
+                <li class = "list-group-item">
+                    <a style="color: black" href="{% url 'myposts' friend.id %}"><h3>{{friend.username}}</h3></a>
+                    <h4>{{friend.first_name}} {{friend.last_name}}</h4>
+                    <h5>{{friend.posts.count}} Posts</h5>
+                    <a class = "btn btn-default" href = "{% url 'reqacceptrequest' friend.id %}">
+                        Accept Request
+                    </a>
+                    <a class = "btn btn-default" href = "{% url 'reqrejectrequest' friend.id %}">
+                        Reject Request
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class = "col-sm-4">
+        <h4> Friend Requests Sent </h4>
+        {% if current_member.sent_requests.count == 0%} <h5>No Sent Requests</h5> {%endif%}
+        <ul class = "list-group" >
+            {% for friend in current_member.sent_requests.all %}
+                <li class = "list-group-item">
+                    <a style="color: black" href="{% url 'myposts' friend.id %}"><h4>{{friend.username}}</h4></a>
+                    <h5>{{friend.first_name}} {{friend.last_name}}</h5>
+                    <h6>{{friend.posts.count}} Posts</h6>
+                    <a class = "btn btn-default" href = "{% url 'reqdeleterequest' friend.id %}">
+                        Delete Request
+                    </a>
+                </li>
+            {% endfor %}
+    </div>
+{% endblock %}
