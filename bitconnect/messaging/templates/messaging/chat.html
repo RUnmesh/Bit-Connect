@@ -1,0 +1,43 @@
+{% extends 'base/profile.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+    <div class = "row">
+        <div class = "col-sm-offset-4 col-sm-7 ">
+            <h2>Conversation</h2>
+            <div class = "d-flex">
+                {% for message in chat.messages.all %}
+                    {% if message.author.user == member.user %}
+                        <div >
+                            <h3>{{message.content}}</h3>
+                            <h5 class = "text-muted"> {{message.author}} - {{message.time}} </h5>
+                        </div>
+                    {% else %}
+                        <div style = "text-align: right">
+                            <h3>{{message.content}}</h3>
+                            <h5 class = "text-muted"> {{message.author}} - {{message.time}} </h5>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if current_member in member.friends.all %}
+                <form method="POST">
+                    {%csrf_token%}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <span class="text-danger small">{{field.errors}}</span>
+                            <label class="control-label" style="font-size: 1.5em;">Message</label>
+                            <div style="font-size: 1.5em;">{{field}}</div>
+                        </div>
+                    {%endfor%}
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp;Message
+                    </button>
+                </form>
+            {% else %}
+                <h4 class = "text-danger" >You are no longer friends</h4>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

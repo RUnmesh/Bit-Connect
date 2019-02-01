@@ -1,13 +1,32 @@
-{% extends base/templates/base/profile.html %}
+{% extends 'base/profile.html' %}
 
 {% block title %}Messages{% endblock %}
 
 {% block content %}
     <div class = "row">
         <div class = "col-sm-offset-4 col-sm-4">
-            <h1>Conversation</h1>
+            <h1>Conversations</h1>
+            {% if current_member.conversations.count == 0%} <h2>No Conversations</h2> {% endif %}
             <ul class = "list-group">
                 {% for chat in chats %}
+                    {% for mem in chat.members.all %}
+                        {% if mem.user != current_member.user %}
+                            <h2><a href = "{% url 'messaging:message' mem.id %}">{{mem.username}}</a></h2>
+                            <h4>{{chat.messages.count}} Messages</h4>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class = "col-sm-4">
+            <h2>Groups 
+                <a href = "#" class = "btn btn-default" style= "position: absolute; right : 15vw;">
+                    <span class = "glyphicon glyphicon-plus"></span>&nbsp;Group
+                </a>
+            </h2>
+            <ul class = "list-group">
+                {% for group in groups %}
+                    <a href = "#" >{{group.name}}</a>
                 {% endfor %}
             </ul>
         </div>

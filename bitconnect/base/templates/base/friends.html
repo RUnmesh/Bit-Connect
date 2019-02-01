@@ -12,6 +12,9 @@
                     <a style="color: black" href="{% url 'myposts' friend.id %}"><h3>{{friend.username}}</h3></a>
                     <h4>{{friend.first_name}} {{friend.last_name}}</h4>
                     <h5>{{friend.posts.count}} Posts</h5>
+                    <a class = "btn btn-default" href = "{% url 'messaging:message' friend.id %}">
+                        Message
+                    </a>
                     <a class = "btn btn-default" href = "{% url 'mainunfriend' friend.id %}">
                         Unfriend
                     </a>
