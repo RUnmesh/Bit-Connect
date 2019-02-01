@@ -41,6 +41,11 @@
                             </a>   
                         </li>
                         <li>
+                            <a class="navbar-link" href="#">
+                                <span class="glyphicon glyphicon-envelope"></span>&nbsp; Messages
+                            </a>   
+                        </li>
+                        <li>
                             <a class="navbar-link" href="{% url 'myposts' current_member.id %}">
                                 <span class="glyphicon glyphicon-certificate"></span>&nbsp; Your Posts
                             </a>   
@@ -104,7 +109,8 @@
                 {% for comment in post.comments.all%}
                     <li class = "list-group-item">
                         <h5 style="color:darkcyan">{{comment.author.username}}</h5>
-                        <h6>{{comment.content}}</h6>
+                        <h6>{{comment.time}}</h6>
+                        <p>{{comment.content}}</p>
                         {% if comment.author == current_member %}
                         <a class="btn btn-default btn-sm bg-fade" href="{% url 'deletecomment' comment.id%}">
                             <span class="glyphicon glyphicon-trash"></span>&nbsp;Delete Comment

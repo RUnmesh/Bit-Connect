@@ -1,0 +1,15 @@
+{% extends base/templates/base/profile.html %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+    <div class = "row">
+        <div class = "col-sm-offset-4 col-sm-4">
+            <h1>Conversation</h1>
+            <ul class = "list-group">
+                {% for chat in chats %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
