@@ -4,18 +4,28 @@ from base.models import Member
 from django.contrib.auth.models import User
 from .forms import CreateMessage
 from django.contrib.auth.decorators import login_required
+from operator import attrgetter
+from django.utils import timezone
 
 @login_required(login_url='/')
 def index (request) :
     user = request.user
     current_member = Member.objects.get(user = user)
-    chats = current_member.conversations.all()
-    groups = []
+    chats = [chat for chat in current_member.conversations.all()]
+    newposs = [mem for mem in current_member.friends.all()]
+    for chat in chats :
+        if (chat.messages.count() == 0) :
+            chats.remove(chat)
+        else :
+            for member in chat.members.all() :
+                if (member.user != current_member.user) and (member in current_member.friends.all()) :
+                    newposs.remove(member)
+    sortedchats  = sorted(chats , key = attrgetter('last_message') , reverse = True)
     context = {
         'current_member' : current_member ,
         'member' : current_member ,
-        'chats' : chats ,
-        'groups' : groups ,
+        'chats' : sortedchats ,
+        'newconvos' : newposs ,
     }
     return render(request , 'messaging/index.html' , context)
 
@@ -45,6 +55,8 @@ def message (request , mem_id) :
         message = form.save(commit = False)
         message.author = current_member
         message.chat = chat
+        chat.last_message = timezone.now()
+        chat.save()
         message.save()
         return redirect('messaging:message' , mem_id = mem_id)
     else :

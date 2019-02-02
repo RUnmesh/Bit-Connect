@@ -19,14 +19,12 @@
             </ul>
         </div>
         <div class = "col-sm-4">
-            <h2>Groups 
-                <a href = "#" class = "btn btn-default" style= "position: absolute; right : 15vw;">
-                    <span class = "glyphicon glyphicon-plus"></span>&nbsp;Group
-                </a>
-            </h2>
+            <h3>Add Conversation</h3>
             <ul class = "list-group">
-                {% for group in groups %}
-                    <a href = "#" >{{group.name}}</a>
+                {% for mem in newconvos %}
+                    <li class = "list-group-item">
+                        <h4><a href = "{% url 'messaging:message' mem.id %}">{{mem.username}}</a></h4>
+                    </li>
                 {% endfor %}
             </ul>
         </div>

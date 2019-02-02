@@ -6,7 +6,7 @@ class SignUpForm(forms.Form) :
     first_name = forms.CharField(max_length=200)
     last_name = forms.CharField(max_length=200)
     email = forms.EmailField()
-    birth_date = forms.DateField(input_formats=['%Y-%m-%d'])
+    birth_date = forms.DateField(widget = forms.DateInput(attrs={'type': 'date'}))
     gender = forms.ChoiceField(choices = ((1,'Male'),(2,'Female')) , widget=forms.RadioSelect)
     phone = forms.CharField(max_length=20)
     password = forms.CharField(widget = forms.PasswordInput)
