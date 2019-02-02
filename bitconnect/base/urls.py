@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^profile/findpeople/deleterequest/(?P<mem_id>[0-9]+)$' , views.finddeleterequest , name='finddeleterequest') ,
     url(r'^profile/findpeople/sendrequest/(?P<mem_id>[0-9]+)$' , views.findsendrequest , name='findsendrequest') ,
     url(r'^profile/findpeople/rejectrequest/(?P<mem_id>[0-9]+)$' , views.findrejectrequest , name='findrejectrequest') ,
+    url(r'^profile/prof_pic$' , views.prof_pic , name="prof_pic") ,
 ]

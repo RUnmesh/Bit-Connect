@@ -11,6 +11,9 @@ from django.utils import timezone
 def index (request) :
     user = request.user
     current_member = Member.objects.get(user = user)
+    time = current_member.last_message
+    current_member.last_message = timezone.now()
+    current_member.save()
     chats = [chat for chat in current_member.conversations.all()]
     newposs = [mem for mem in current_member.friends.all()]
     for chat in chats :
@@ -26,6 +29,7 @@ def index (request) :
         'member' : current_member ,
         'chats' : sortedchats ,
         'newconvos' : newposs ,
+        'time' : time
     }
     return render(request , 'messaging/index.html' , context)
 
@@ -57,6 +61,8 @@ def message (request , mem_id) :
         message.chat = chat
         chat.last_message = timezone.now()
         chat.save()
+        current_member.last_message = timezone.now()
+        current_member.save()
         message.save()
         return redirect('messaging:message' , mem_id = mem_id)
     else :

@@ -82,11 +82,26 @@
 
         <div class="container-fluid">
             <div class = "row" >
-                <div class = "col-md-3 prosidebar" style="text-align: center">
+                <div class = "col-sm-3 prosidebar" style="text-align: center">
+                    {% if member.profile_pic %}
+                        <img src="{{member.profile_pic.url}}" width="240px" height="240px">
+                    {% else %}
+                        <img src="{% static 'base/images/default.jpg' %}" class = "mx-auto rounded img-thumbnail">
+                    {% endif %}
+                    {% if member.user == current_member.user%}
+                        <h6><a href = "{% url 'prof_pic' %}"> Change Profile Picture </a></h6>
+                    {% endif %}
                     <h1 style = "font-family: 'Baloo Thambi', cursive;">
                         {{member.username}}
                         {% if member.user == current_member.user %}<span class="badge badge-secondary">You</span>{% endif %}
                     </h1>
+                    <h6 class = "badge badge-secondary">
+                        {% if member.online == True %}
+                            Online
+                        {% else %}
+                            Last Seen - {{member.last_seen}}
+                        {% endif %}
+                    </h6>
                     <h4>{{member.first_name}} {{member.last_name}}</h4>
                     <h4>
                         {% if member.gender == 1 %} Male 

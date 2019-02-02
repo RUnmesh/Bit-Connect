@@ -45,6 +45,8 @@ def signin (request) :
             if user :
                 login(request , user)
                 member = Member.objects.get(user = user)
+                member.online = True
+                member.save()
                 return redirect('myposts' , mem_id = member.id)
             else :
                 messages.error(request , "Please check your login credentials")
@@ -57,6 +59,10 @@ def signin (request) :
 @login_required(login_url='/')
 def logouts (request) :
     user = request.user
+    current_member = Member.objects.get(user = user)
+    current_member.last_seen = timezone.now()
+    current_member.online = False
+    current_member.save()
     logout(request)
     messages.success(request , "Logged out successfully")
     return redirect('signin')
@@ -327,6 +333,24 @@ def find (request) :
         'users' : users ,
         }
     return render(request , 'base/findpeople.html' , context)
+
+def prof_pic (request) :
+    user = request.user
+    current_member = Member.objects.get(user = user)
+    context = {
+        'current_member' : current_member ,
+        'member' : current_member ,
+        }
+    if request.method == "POST" :
+        image = request.FILES['profile_pic'] if 'profile_pic' in request.FILES else None
+        if image != None :
+            if current_member.profile_pic :
+                current_member.profile_pic.delete()
+            current_member.profile_pic = image
+            current_member.save()
+            return redirect('myposts' , current_member.id)
+
+    return render(request , 'base/addprofpic.html' , context)
 
 
 

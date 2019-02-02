@@ -26,3 +26,4 @@ class CreateCommentForm(forms.ModelForm) :
     class Meta :
         model = Comments
         fields = ['content']
+

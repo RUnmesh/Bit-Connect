@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+import os
+
+def path_and_rename(instance, filename):
+    upload_to = 'profile_pics'
+    filename = instance.username
+    return os.path.join(upload_to, filename)
 
 class Member(models.Model) :
     user = models.OneToOneField(User , on_delete=models.CASCADE)
@@ -13,6 +19,10 @@ class Member(models.Model) :
     gender = models.IntegerField()
     friends = models.ManyToManyField("self" , related_name='friends' , symmetrical=True , blank = True)
     friend_requests = models.ManyToManyField("self" , related_name = 'sent_requests' , symmetrical = False , blank = True)
+    last_seen = models.DateTimeField(default = timezone.now)
+    online = models.BooleanField(default = False)
+    last_message = models.DateTimeField(default = timezone.now)
+    profile_pic = models.ImageField(upload_to = path_and_rename , blank = True , null = True)
 
     def __str__(self) :
         return self.username

@@ -11,7 +11,10 @@
                 {% for chat in chats %}
                     {% for mem in chat.members.all %}
                         {% if mem.user != current_member.user %}
-                            <h2><a href = "{% url 'messaging:message' mem.id %}">{{mem.username}}</a></h2>
+                            <h2>
+                                <a href = "{% url 'messaging:message' mem.id %}">{{mem.username}}</a>
+                                {% if time < chat.last_message %}<span class="badge badge-secondary">New Message</span>{% endif %}
+                            </h2>
                             <h4>{{chat.messages.count}} Messages</h4>
                         {% endif %}
                     {% endfor %}
