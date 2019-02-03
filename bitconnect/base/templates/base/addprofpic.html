@@ -1,0 +1,51 @@
+{% extends 'base/profile.html' %}
+{% load staticfiles%}
+
+
+{% block title %}Edit Profile Picture{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    function upload_img(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img_id').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+<div class = "row">
+    <div class = "col-sm-offset-4 col-sm-8"><h1>Edit Profile Picture</h1></div>
+    <div class = "col-sm-offset-4 col-sm-3">
+        <h2>Current</h2>
+        {% if member.profile_pic %}
+            <img src="{{member.profile_pic.url}}" width="240px" height="240px">
+        {% else %}
+            <img src="{% static 'base/images/default.jpg' %}" width="240px" height="240px">
+        {% endif %}
+        <br>
+        <br>
+        <form action="{% url 'prof_pic' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type='file' onchange="upload_img(this);" name = "profile_pic" class = "btn btn-lg" />
+            <br>
+            <button type="submit" class="btn btn-lg btn-default">
+                Change
+            </button>
+        </form>
+    </div>
+    <div class = "col-sm-4">
+        <h2> New </h2>
+        <img id="img_id" src="#" alt=" " width="240px" height="240px">
+    </div>
+</div>
+
+
+{% endblock %}
+

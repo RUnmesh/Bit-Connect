@@ -27,3 +27,5 @@ class CreateCommentForm(forms.ModelForm) :
         model = Comments
         fields = ['content']
 
+class EditProfForm (forms.Form) :
+    bio = forms.CharField(widget = forms.Textarea)

@@ -23,6 +23,7 @@ class Member(models.Model) :
     online = models.BooleanField(default = False)
     last_message = models.DateTimeField(default = timezone.now)
     profile_pic = models.ImageField(upload_to = path_and_rename , blank = True , null = True)
+    bio = models.TextField(null = True , blank = True)
 
     def __str__(self) :
         return self.username

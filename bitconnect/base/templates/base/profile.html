@@ -17,7 +17,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'base/style.css' %}">
         <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi" rel="stylesheet">
-        <title>{%block title%}BITCONNECT{% endblock %}</title>
+        <title>BITCONNECT-{%block title%}{% endblock %}</title>
     </head>
     
     <body>
@@ -81,7 +81,7 @@
         <br>
 
         <div class="container-fluid">
-            <div class = "row" >
+           <div class = "row"> 
                 <div class = "col-sm-3 prosidebar" style="text-align: center">
                     {% if member.profile_pic %}
                         <img src="{{member.profile_pic.url}}" width="240px" height="240px">
@@ -135,6 +135,14 @@
                     <h4 style="background-color: lightgray; padding:10px;">Contact Details</h4>
                     <h4>Email : {{member.email}}</h4>
                     <h4>Phone : {{member.phone}}</h4>
+                    {% if member.bio %}
+                        <h4 style="background-color: lightgray; padding:10px;">Bio</h4>
+                        <h4>{{member.bio}} </h4>
+                    {% endif %}
+                    {% if member.user == current_member.user%}
+                        <h6><a href = "{% url 'editbio' %}"> Edit Bio </a></h6>
+                    {% endif %}
+                    {% if member.friends.count != 0 %}
                     <h4 style="background-color: lightgray; padding:10px;"><a href="#" style = "color: black;">Friends</a></h4>
                         <ul style ="text-align: left;">
                             {% for friend in member.friends.all%}
@@ -143,6 +151,7 @@
                                 {% endif %}
                             {% endfor %}
                         </ul>
+                    {% endif %}
                 </div>
                 {% block content %}
                 {% endblock %}

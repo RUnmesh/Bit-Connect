@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import SignUpForm , SignInForm , CreatePostForm , CreateCommentForm
+from .forms import SignUpForm , SignInForm , CreatePostForm , CreateCommentForm , EditProfForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -104,47 +104,43 @@ def my_posts(request , mem_id) :
         }
         return render(request , 'base/mypost.html' , context)
 
-def like(request , post_id):
+def mainlike (request , post_id) :
     post = Post.objects.get(pk = post_id)
     user = request.user
     current_member = Member.objects.get(user = user)
     post.liked.add(current_member)
+
+def maindislike (request , post_id) :
+    post = Post.objects.get(pk = post_id)
+    user = request.user
+    current_member = Member.objects.get(user = user)
+    post.liked.remove(current_member)
+
+def like(request , post_id):
+    mainlike(request , post_id)
+    post = Post.objects.get(pk = post_id)
     return redirect('myposts' , mem_id = post.author.id)
 
 def dislike(request , post_id):
     post = Post.objects.get(pk = post_id)
-    user = request.user
-    current_member = Member.objects.get(user = user)
-    post.liked.remove(current_member)
+    maindislike(request , post_id)
     return redirect('myposts' , mem_id = post.author.id)
 
 def plike(request , post_id):
-    post = Post.objects.get(pk = post_id)
-    user = request.user
-    current_member = Member.objects.get(user = user)
-    post.liked.add(current_member)
+    mainlike(request , post_id)
     return redirect('posts')
 
 def pdislike(request , post_id):
-    post = Post.objects.get(pk = post_id)
-    user = request.user
-    current_member = Member.objects.get(user = user)
-    post.liked.remove(current_member)
+    maindislike(request , post_id)
     return redirect('posts')
 
 def pplike(request , post_id):
-    post = Post.objects.get(pk = post_id)
-    user = request.user
-    current_member = Member.objects.get(user = user)
-    post.liked.add(current_member)
-    return redirect('postdetail' , post_id = post.id)
+    mainlike(request , post_id)
+    return redirect('postdetail' , post_id = post_id)
 
 def ppdislike(request , post_id):
-    post = Post.objects.get(pk = post_id)
-    user = request.user
-    current_member = Member.objects.get(user = user)
-    post.liked.remove(current_member)
-    return redirect('postdetail' , post_id = post.id)
+    maindislike(request , post_id)
+    return redirect('postdetail' , post_id = post_id)
 
 @login_required(login_url='/')
 def posts (request) :
@@ -351,6 +347,29 @@ def prof_pic (request) :
             return redirect('myposts' , current_member.id)
 
     return render(request , 'base/addprofpic.html' , context)
+
+def editbio (request) :
+    user = request.user
+    current_member = Member.objects.get(user = user)
+    if request.method == 'POST' :
+        bio = request.POST.get('bio') if 'bio' in request.POST else None
+        if bio != None :
+            current_member.bio = bio
+            current_member.save()
+        else :
+            return redirect('editbio')
+        return redirect('myposts' , current_member.id)
+    else :
+        if current_member.bio != None :
+            form = EditProfForm(initial = {'bio' : current_member.bio})
+        else :
+            form = EditProfForm()
+        context = {
+        'current_member' : current_member ,
+        'member' : current_member ,
+        'form' : form
+        }
+        return render(request , 'base/editbio.html' , context)
 
 
 
