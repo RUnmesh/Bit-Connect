@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import os
 
-def path_and_rename(instance, filename):
+def path_and_rename(self, filename):
     upload_to = 'profile_pics'
-    filename = instance.username
+    filename = self.username
     return os.path.join(upload_to, filename)
 
 class Member(models.Model) :
@@ -27,6 +27,9 @@ class Member(models.Model) :
 
     def __str__(self) :
         return self.username
+
+class Sessions(models.Model) :
+    users = models.ManyToManyField(Member , symmetrical=False , blank = True)
 
 class Post(models.Model) :
     time = models.DateTimeField(default = timezone.now)

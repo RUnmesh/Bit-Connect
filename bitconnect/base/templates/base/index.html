@@ -48,6 +48,64 @@
                 <div class="col-md-6">
                     <h1 style="font-family: 'Pacifico', cursive">Fill In Your Details To Sign Up!</h1>
                     <h1 style="font-family: 'Pacifico', cursive">Its Free Because Otherwise You Won't Sign Up! </h1>
+                    <div style="text-align: center"><h1>Recent Users</h1></div>
+                    
+                    {%for member in recent_users %}
+                    <div class = "col-md-3 col-md-offset-1 but">
+                        <button class = "btn btn-lg" onclick="changeDisplay(this , {{member.id}})">
+                            {% if member.profile_pic %}
+                                <img src="{{member.profile_pic.url}}" width="240px" height="240px">
+                            {% else %}
+                                <img src="{% static 'base/images/default.jpg' %}" class = "mx-auto rounded img-thumbnail">
+                            {% endif %}
+                            <h2>{{member.username}}</h2>
+                        </button>
+                    </div>
+
+                    <div class="signin" style="display:none" id = "{{member.id}}">
+                        <button class="btn btn-lg" style="align-self:left;" onclick="changeDisplay(this , -1)">&larr;Back</button><br>
+                        {% if member.profile_pic %}
+                            <img src="{{member.profile_pic.url}}" width="300px" height="300px" stlye="position:absolute; left: 50%;transform: translate(-50%,0%);">
+                        {% else %}
+                            <img src="{% static 'base/images/default.jpg' %}" width="300px" height="300px" stlye="position:absolute; left: 50%;transform: translate(-50%,0%);">
+                        {% endif %}
+                        <h1>{{member.username}}</h1>
+                        <form action="{% url 'signin' %}" method="POST">
+                            {%csrf_token%}
+                            <label><h3>Password</h3></label>
+                            <input type="password" name="password">
+                            <input type="hidden" name="username" value="{{member.username}}">
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-off"></span>&nbsp;Sign In
+                            </button>
+                        </form>
+                    </div>
+
+                    {% endfor %}
+
+                    <script>
+                        function changeDisplay(ev , id )
+                        {
+                            if (id>=0)
+                            {
+                                var form = document.getElementById(id);
+                                form.style.display = "block";
+                                let buttons = document.querySelectorAll('.but')
+                                for (var button of buttons)
+                                    button.style.display = "none";
+                            }
+                            else
+                            {
+                                var forms = document.querySelectorAll('.signin')
+                                for (var form of forms)
+                                    form.style.display = "none";
+                                let buttons = document.querySelectorAll('.but')
+                                for (var button of buttons)
+                                    button.style.display = "block";
+                            }
+                            ev.stopPropagation();
+                        }
+                    </script>
                 </div>
                 <div class = "col-md-offset-1 col-md-4">
                         {% if messages %}

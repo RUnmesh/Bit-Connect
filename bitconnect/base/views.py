@@ -3,13 +3,17 @@ from .forms import SignUpForm , SignInForm , CreatePostForm , CreateCommentForm 
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import redirect
-from .models import Member , Post ,Comments
+from .models import Member , Post ,Comments , Sessions
 from django.contrib.auth import authenticate , login , logout
 from django.utils import timezone
 from operator import attrgetter
 from django.contrib.auth.decorators import login_required
 
 def index (request) :
+    recent_users = []
+    if 'id' in request.COOKIES:
+        sess = Sessions.objects.get(pk = int(request.COOKIES['id']))
+        recent_users = [user for user in sess.users.all()]
     if request.method == 'POST' :
         form = SignUpForm(request.POST)
         if form.is_valid() :
@@ -30,27 +34,36 @@ def index (request) :
         else:
             form = SignUpForm()
             messages.error(request , "Check details")
-            return render(request , 'base/index.html' , {'form':form})            
+            return render(request , 'base/index.html' , {'form':form , 'recent_users' : recent_users[-4:]})            
     else :
         form = SignUpForm()
-        return render(request , 'base/index.html' , {'form':form})
+        resp = render(request , 'base/index.html' , {'form':form , 'recent_users' : recent_users[-4:]})
+        if 'id' not in request.COOKIES:
+            sess = Sessions.objects.create()
+            resp.set_cookie('id' , sess.id)
+        return resp
 
 def signin (request) :
     if request.method == 'POST' :
-        form = SignInForm(request.POST)
-        if form.is_valid() :
-            user_name = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(username = user_name , password = password)
-            if user :
-                login(request , user)
-                member = Member.objects.get(user = user)
-                member.online = True
-                member.save()
-                return redirect('myposts' , mem_id = member.id)
-            else :
-                messages.error(request , "Please check your login credentials")
-                return redirect('signin')
+        user_name = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username = user_name , password = password)
+        if user :
+            login(request , user)
+            member = Member.objects.get(user = user)
+            member.online = True
+            member.save()
+            sess = Sessions.objects.get(pk = int(request.COOKIES['id']))
+            if member not in sess.users.all():
+                sess.users.add(member)
+                if sess.users.all().count() > 4:
+                    u = [user for user in sess.users.all()]
+                    sess.users.remove(u[0])
+                sess.save()
+            return redirect('myposts' , mem_id = member.id)
+        else :
+            messages.error(request , "Please check your login credentials")
+            return redirect('signin')
 
     else :
         form = SignInForm()
