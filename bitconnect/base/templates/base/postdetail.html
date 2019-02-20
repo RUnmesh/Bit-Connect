@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
         <!-- Latest compiled and minified JavaScript -->
-        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'base/style.css' %}">
         <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi" rel="stylesheet">
@@ -81,15 +81,15 @@
             <h1>{{post.title}}</h1>
             <h5>Author - {{post.author.username}} &nbsp; Time - {{post.time}}</h5>
             <h3>{{post.content}}</h3>
-            <p>{{post.liked.count}} Likes &nbsp;{{post.comments.count}} Comments</p>
+            <p><span id = "{{post.id}}">{{post.liked.count}}</span> Likes &nbsp;{{post.comments.count}} Comments</p>
             {% if current_member not in post.liked.all %}
-            <a class="btn btn-default bg-fade" href="{% url 'pplike' post.id%}">
+            <button class="btn btn-default bg-fade" post = '{{post.id}}' stat = '1' onclick="changelike(this)">
                 <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Like
-            </a>
+            </button>
             {% else %}
-            <a class="btn btn-default bg-fade" href="{% url 'ppdislike' post.id%}">
+            <button class="btn btn-default bg-fade" post = '{{post.id}}' stat = '0' onclick="changelike(this)">
                 <span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;Dislike
-            </a>
+            </button>
             {%endif%}
             <h4>Add Comment</h4>
             <form method="POST">
@@ -120,5 +120,6 @@
                 {% endfor %}
             </ul>
         </div>
+    <script src = "{% static 'base/like.js' %}"></script>
     </body>
 </html>

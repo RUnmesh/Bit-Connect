@@ -1,4 +1,5 @@
 {% extends 'base/profile.html' %}
+{% load staticfiles%}
 
 {% block title %} My Post {%endblock%}
 
@@ -12,16 +13,16 @@
             <li class = "list-group-item">
                 <h2>{{post.title}}</h2>
                 <p>{{post.content}}</p>
-                <p>{{post.liked.count}} Likes &nbsp;{{post.comments.count}} Comments
+                <p><span id = "{{post.id}}">{{post.liked.count}}</span> Likes &nbsp;{{post.comments.count}} Comments
                 </p>
                 {% if current_member not in post.liked.all %}
-                <a class="btn btn-default bg-fade" href="{% url 'like' post.id%}">
+                <button class="btn btn-default bg-fade" onclick="changelike(this)" stat = '1' post = '{{post.id}}'>
                     <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Like
-                </a>
+                </button>
                 {% else %}
-                <a class="btn btn-default bg-fade" href="{% url 'dislike' post.id%}">
+                <button class="btn btn-default bg-fade" onclick="changelike(this)" stat = '0' post = '{{post.id}}'>
                     <span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;Dislike
-                </a>
+                </button>
                 {%endif%}
                 <a class="btn btn-default bg-fade" href="{% url 'postdetail' post.id %}">
                     <span class="glyphicon glyphicon-comment"></span>&nbsp;Comment
@@ -58,4 +59,5 @@
         {% endif %}
     </div>
 </div>
+<script src = "{% static 'base/like.js' %}"></script>
 {% endblock %}

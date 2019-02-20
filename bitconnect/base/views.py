@@ -7,7 +7,9 @@ from .models import Member , Post ,Comments , Sessions
 from django.contrib.auth import authenticate , login , logout
 from django.utils import timezone
 from operator import attrgetter
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def index (request) :
     recent_users = []
@@ -117,43 +119,23 @@ def my_posts(request , mem_id) :
         }
         return render(request , 'base/mypost.html' , context)
 
-def mainlike (request , post_id) :
-    post = Post.objects.get(pk = post_id)
+@csrf_exempt
+def likes (request) :
+    post = Post.objects.get(pk = int(request.POST.get('post')))
     user = request.user
     current_member = Member.objects.get(user = user)
     post.liked.add(current_member)
+    data = {'likes' : post.liked.all().count()}
+    return JsonResponse(data)
 
-def maindislike (request , post_id) :
-    post = Post.objects.get(pk = post_id)
+@csrf_exempt
+def dislikes (request) :
+    post = Post.objects.get(pk = int(request.POST.get('post')))
     user = request.user
     current_member = Member.objects.get(user = user)
     post.liked.remove(current_member)
-
-def like(request , post_id):
-    mainlike(request , post_id)
-    post = Post.objects.get(pk = post_id)
-    return redirect('myposts' , mem_id = post.author.id)
-
-def dislike(request , post_id):
-    post = Post.objects.get(pk = post_id)
-    maindislike(request , post_id)
-    return redirect('myposts' , mem_id = post.author.id)
-
-def plike(request , post_id):
-    mainlike(request , post_id)
-    return redirect('posts')
-
-def pdislike(request , post_id):
-    maindislike(request , post_id)
-    return redirect('posts')
-
-def pplike(request , post_id):
-    mainlike(request , post_id)
-    return redirect('postdetail' , post_id = post_id)
-
-def ppdislike(request , post_id):
-    maindislike(request , post_id)
-    return redirect('postdetail' , post_id = post_id)
+    data = {'likes' : post.liked.all().count()}
+    return JsonResponse(data)
 
 @login_required(login_url='/')
 def posts (request) :
