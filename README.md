@@ -1,2 +1,2 @@
 # Bit-Connect
-This is an amateur attempt at making a basic social networking site using Django
+There was an open issue on this repository and I wanted a t-shirt, so I fixed this issue. Now this is much more of an appropriate README.
